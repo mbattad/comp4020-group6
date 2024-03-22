@@ -29,7 +29,7 @@
 	</path>
 	
 	<target name="clean">
-		<delete dir="${bin.dir}"/>
+		<delete dir="${bin.dir}" excludes="*.sh"/>
 		<echo>delete complete!</echo>
 	</target>
 	
