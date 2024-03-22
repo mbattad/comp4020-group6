@@ -9,12 +9,12 @@ import jp.vstone.sotatalk.TextToSpeechSota;
 public class ControlSota {
 
     public static void main(String [] args) {
-        //CRobotMem mem = new CRobotMem();
+        CRobotMem mem = new CRobotMem();
         Scanner scanner = new Scanner(System.in);
 
-        //if(!mem.Connect()) {
-        //    System.out.println("Error connecting to robot's memory");
-        //}
+        if(!mem.Connect()) {
+           System.out.println("Error connecting to robot's memory");
+        }
 
         System.out.println("User's name: ");
         String username = scanner.nextLine();
@@ -27,12 +27,12 @@ public class ControlSota {
                 case "hi":
                     // Sota says "hi" to the user
                     System.out.println("Greeting user "+username);
-                    //CPlayWave.PlayWave(TextToSpeechSota.getTTS("ハイ"+username));
+                    CPlayWave.PlayWave(TextToSpeechSota.getTTS("ハイ"+username));
                     break;
                 case "bye":
                     // Sota says "bye" to the user
                     System.out.println("Exiting");
-                    //CPlayWave.PlayWave(TextToSpeechSota.getTTS("バイ"));
+                    CPlayWave.PlayWave(TextToSpeechSota.getTTS("バイ"));
                     break;
                 default:
                     break;
