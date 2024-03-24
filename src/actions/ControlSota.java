@@ -1,44 +1,72 @@
 package actions;
 
+import java.awt.Color;
 import java.util.Scanner;
 
-import jp.vstone.RobotLib.CRobotMem;
-import jp.vstone.RobotLib.CPlayWave;
-import jp.vstone.sotatalk.TextToSpeechSota;
+import jp.vstone.RobotLib.*;
+import jp.vstone.camera.CRoboCamera;
 
 public class ControlSota {
 
     public static void main(String [] args) {
         CRobotMem mem = new CRobotMem();
+        CSotaMotion motion = new CSotaMotion(mem);
         Scanner scanner = new Scanner(System.in);
 
         if(!mem.Connect()) {
            System.out.println("Error connecting to robot's memory");
         }
 
-        System.out.println("User's name: ");
-        String username = scanner.nextLine();
+        motion.InitRobot_Sota();
+        motion.ServoOn();
 
-        while(scanner.hasNextLine()) {
+        CRoboCamera cam = new CRoboCamera("/dev/video0", motion);
+        cam.StartFaceTraking();
+
+        CRobotPose pose = CSotaMotion.getInitPose();
+        pose.setLED_Sota(Color.BLUE, Color.BLUE, 0, Color.GREEN);
+        motion.play(pose, 1000);
+        motion.waitEndinterpAll();
+        CPlayWave.PlayWave("../src/sound/cursor10.wav");
+
+        boolean exit = false;
+        System.out.println("Ready to accept commands!");
+        do {
             String input = scanner.nextLine();
             String command = input.split(" ")[0];
 
             switch(command) {
-                case "hi":
-                    // Sota says "hi" to the user
-                    System.out.println("Greeting user "+username);
-                    CPlayWave.PlayWave(TextToSpeechSota.getTTS("ハイ"+username));
+                // Have Sota make the default pose
+                case "d":
+                    pose = CSotaMotion.getInitPose();
+                    pose.setLED_Sota(Color.BLUE, Color.BLUE, 0, Color.GREEN);
+                    motion.play(pose, 1000);
                     break;
-                case "bye":
-                    // Sota says "bye" to the user
-                    System.out.println("Exiting");
-                    CPlayWave.PlayWave(TextToSpeechSota.getTTS("バイ"));
+                // Sota's pose when the user says something correct
+                case "c":
+                pose.SetPose(new Byte[] {1, 2, 3, 4, 5, 6, 7, 8},
+                        new Short[] {0, 700, -250, -700, 250, 0, 0, 0});
+                    pose.setLED_Sota(Color.GREEN, Color.GREEN, 0, Color.GREEN);
+                    motion.play(pose, 1500);
+                    break;
+                // Sota's pose when the user says something incorrect
+                case "i":
+                    pose.SetPose(new Byte[] {1, 2, 3, 4, 5, 6, 7, 8},
+                        new Short[]{0, -500, -900, 500, 900, 0, 0, 0});
+                    pose.setLED_Sota(Color.RED, Color.RED, 0, Color.GREEN);
+                    motion.play(pose, 1000);
+                    break;
+                case "exit":
+                    exit = true;
                     break;
                 default:
                     break;
             }
-        }
+        } while(scanner.hasNextLine() && !exit);
 
+        System.out.println("Exiting…");
         scanner.close();
+        cam.StopFaceTraking();
+        motion.ServoOff();
     }
 }
