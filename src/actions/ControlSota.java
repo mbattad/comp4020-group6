@@ -5,12 +5,14 @@ import java.util.Scanner;
 
 import jp.vstone.RobotLib.*;
 import jp.vstone.camera.CRoboCamera;
+import jp.vstone.sotatalk.MotionAsSotaWish;
 
 public class ControlSota {
 
     public static void main(String [] args) {
         CRobotMem mem = new CRobotMem();
         CSotaMotion motion = new CSotaMotion(mem);
+        MotionAsSotaWish freeMotion = new MotionAsSotaWish(motion);
         Scanner scanner = new Scanner(System.in);
 
         if(!mem.Connect()) {
@@ -48,17 +50,24 @@ public class ControlSota {
                         new Short[] {0, 700, -250, -700, 250, 0, 0, 0});
                     pose.setLED_Sota(Color.GREEN, Color.GREEN, 0, Color.GREEN);
                     motion.play(pose, 1500);
+                    CPlayWave.PlayWave("../src/sound/cursor10.wav");
                     break;
-                // Sota's pose when the user says something incorrect
+                // Sota's pose when the tuser says something incorrect
                 case "i":
                     pose.SetPose(new Byte[] {1, 2, 3, 4, 5, 6, 7, 8},
                         new Short[]{0, -500, -900, 500, 900, 0, 0, 0});
                     pose.setLED_Sota(Color.RED, Color.RED, 0, Color.GREEN);
                     motion.play(pose, 1000);
                     break;
+                case "dab":
+                    pose.SetPose(new Byte[] {1, 2, 3, 4, 5, 6, 7, 8},
+                        new Short[]{0, -500, -900, 500, -700, 250, 0, 0});
+                    pose.setLED_Sota(Color.RED, Color.RED, 0, Color.GREEN);
+                    motion.play(pose, 1500);
+                    break;
                 case "exit":
                     exit = true;
-                    break;
+                    break; 
                 default:
                     break;
             }
