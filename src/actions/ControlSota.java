@@ -52,17 +52,18 @@ public class ControlSota {
                     motion.play(pose, 1500);
                     CPlayWave.PlayWave("../src/sound/cursor10.wav");
                     break;
-                // Sota's pose when the tuser says something incorrect
+                // Sota's pose when the user says something incorrect
                 case "i":
                     pose.SetPose(new Byte[] {1, 2, 3, 4, 5, 6, 7, 8},
                         new Short[]{0, -500, -900, 500, 900, 0, 0, 0});
                     pose.setLED_Sota(Color.RED, Color.RED, 0, Color.GREEN);
                     motion.play(pose, 1000);
                     break;
-                case "dab":
+                // Sota's pose when it greets the user
+                case "hi":
                     pose.SetPose(new Byte[] {1, 2, 3, 4, 5, 6, 7, 8},
-                        new Short[]{0, -500, -900, 500, -700, 250, 0, 0});
-                    pose.setLED_Sota(Color.RED, Color.RED, 0, Color.GREEN);
+                        new Short[]{0, -900, 0, -700, 250, 0, 0, 0});
+                    pose.setLED_Sota(Color.BLUE, Color.BLUE, 0, Color.GREEN);
                     motion.play(pose, 1500);
                     break;
                 case "exit":
